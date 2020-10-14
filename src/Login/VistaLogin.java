@@ -1,11 +1,14 @@
 package Login;
 
+import VentanaAdmin.VistaAdmin;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
+import java.sql.SQLException;
 
 public class VistaLogin extends JFrame {
 
@@ -21,7 +24,7 @@ public class VistaLogin extends JFrame {
 
    public VistaLogin(){
        setVisible(true);
-       setBounds(600, 300, 800, 500);
+       setBounds(600, 300, 800, 600);
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        setResizable(false);
        login =new Login();
@@ -42,15 +45,15 @@ public class VistaLogin extends JFrame {
 
        //Texto Usuario y label
        jLabelPassword = new JLabel("Contrasenia - ");
-       jLabelPassword.setBounds(260,240,100,20);
+       jLabelPassword.setBounds(240,170,120,20);
        password=new JPasswordField();
-       password.setBounds(330,240,150,20);
+       password.setBounds(330,170,150,20);
        contentPane.add(password);
        contentPane.add(jLabelPassword);
 
        //Boton Conectar
        connection= new JButton("Conectar");
-       connection.setBounds(330,340,100,20);
+       connection.setBounds(330,200,100,20);
        contentPane.add(connection);
        connection.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent evt) {
@@ -63,9 +66,21 @@ public class VistaLogin extends JFrame {
     {
 
         try{
+
             login.conectarBD(user,password);
+            this.dispose();
+
+            if(user.equals("admin")){
+                VistaAdmin vistaAdmin=new VistaAdmin(login.getTabla());
+            }
+            else{
+                if(user.equals("inspector")){
+
+                }
+            }
         }
-        catch (Exception ex){
+
+        catch (SQLException ex){
             JOptionPane.showMessageDialog(this,
                     "Se produjo un error al intentar conectarse a la base de datos.\n"
                             + ex.getMessage(),

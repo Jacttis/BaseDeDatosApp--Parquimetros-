@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 public class Login {
     private DBTable tabla;
-    private VistaLogin GUI;
     
     public DBTable getTabla() {
         return tabla;
@@ -23,6 +22,8 @@ public class Login {
         tabla=new DBTable();
     }
 
+
+
     public void conectarBD(String usuario, String clave) throws SQLException{
 
         try
@@ -33,7 +34,7 @@ public class Login {
             String uriConexion = "jdbc:mysql://" + servidor + "/" +
                     baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
 
-            //establece una conexi�n con la  B.D. "batallas"  usando directamante una tabla DBTable
+            //establece una conexi�n con la  B.D. "parquimetros"  usando directamante una tabla DBTable
             tabla.connectDatabase(driver, uriConexion, usuario, clave);
             System.out.println("Success");
 
