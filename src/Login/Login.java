@@ -6,7 +6,9 @@ import javax.swing.*;
 import java.sql.SQLException;
 
 public class Login {
-
+    private DBTable tabla;
+    private VistaLogin GUI;
+    
     public DBTable getTabla() {
         return tabla;
     }
@@ -15,8 +17,7 @@ public class Login {
         this.tabla = tabla;
     }
 
-    private DBTable tabla;
-    private VistaLogin GUI;
+
 
     public Login(){
         tabla=new DBTable();
