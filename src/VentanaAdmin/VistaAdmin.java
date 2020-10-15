@@ -21,7 +21,8 @@ public class VistaAdmin extends JFrame {
     private DBTable tabla;
     private JList listaTablas;
     private DefaultListModel<String> dListaTabla;
-    private JList listaColumnas;
+    private JList<String> listaColumnas;
+    private DefaultListModel<String> dListaColumnas;
     private Admin admin;
 
 
@@ -32,6 +33,7 @@ public class VistaAdmin extends JFrame {
         setPreferredSize(new Dimension(1028, 600));
         this.setBounds(600, 300, 1028, 600);
         setLayout(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Panel
         contentPane=new JPanel();
@@ -65,15 +67,29 @@ public class VistaAdmin extends JFrame {
         tabla.setBounds(0,100,701,460);
         contentPane.add(tabla);
 
+       //Lista con todas las tablas
+        listaColumnas=new JList<String>();
+        listaColumnas.setBounds(868,100,162,262);
+        contentPane.add(listaColumnas);
+
+
+
         //Lista con todas las tablas
-        dListaTabla=admin.crearLista("SHOW TABLES");
+        dListaTabla=admin.crearLista("SHOW TABLES","Tables_in_parquimetros");
         listaTablas=new JList(dListaTabla);
         listaTablas.setBounds(705,100,162,262);
+        listaTablas.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         contentPane.add(listaTablas);
+
         listaTablas.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                System.out.println(listaTablas.getSelectedIndex());
+                if(!e.getValueIsAdjusting()) {
+                        System.out.println(dListaTabla.getElementAt(e.getLastIndex()));
+                        dListaColumnas=admin.crearLista("describe "+dListaTabla.getElementAt(e.getLastIndex()),"Field");
+                        listaColumnas.setModel(dListaColumnas);
+                        listaTablas.clearSelection();
+                }
                 //admin.crearLista("Show "+listaTablas.getSelectedValue());
             }
         });
@@ -81,10 +97,7 @@ public class VistaAdmin extends JFrame {
 
 
 
-        //Lista con todas las tablas
-        listaTablas=new JList();
-        listaTablas.setBounds(868,100,162,262);
-        contentPane.add(listaTablas);
+
 
     }
     private void btnEjecutarActionPerformed(ActionEvent evt) {
