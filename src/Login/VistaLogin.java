@@ -62,8 +62,7 @@ public class VistaLogin extends JFrame {
        });
    }
 
-    private void btnConectar(ActionEvent evt,String user,String password)
-    {
+    private void btnConectar(ActionEvent evt,String user,String password){
 
         try{
 

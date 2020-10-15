@@ -4,12 +4,13 @@ import quick.dbtable.DBTable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Vector;
 
 public class VistaAdmin extends JFrame {
 
@@ -19,10 +20,13 @@ public class VistaAdmin extends JFrame {
     private JButton btnEjecutar;
     private DBTable tabla;
     private JList listaTablas;
+    private DefaultListModel<String> dListaTabla;
     private JList listaColumnas;
+    private Admin admin;
 
 
     public VistaAdmin(DBTable tabla){
+        admin=new Admin(tabla);
         setVisible(true);
         setResizable(false);
         setPreferredSize(new Dimension(1028, 600));
@@ -62,24 +66,20 @@ public class VistaAdmin extends JFrame {
         contentPane.add(tabla);
 
         //Lista con todas las tablas
-        DefaultListModel<String> listModel = new DefaultListModel<String>();
-        try {
-            tabla.setSelectSql("Show tables");
-            tabla.createColumnModelFromQuery();
-            tabla.refresh();
-            Vector vector= tabla.getDataVector();
-
-            for(int i=0; i< vector.size() ;i++){
-
-               listModel.addElement(vector.get(i).toString());
-
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        listaTablas=new JList(listModel);
+        dListaTabla=admin.crearLista("SHOW TABLES");
+        listaTablas=new JList(dListaTabla);
         listaTablas.setBounds(705,100,162,262);
         contentPane.add(listaTablas);
+        listaTablas.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                System.out.println(listaTablas.getSelectedIndex());
+                //admin.crearLista("Show "+listaTablas.getSelectedValue());
+            }
+        });
+
+
+
 
         //Lista con todas las tablas
         listaTablas=new JList();
