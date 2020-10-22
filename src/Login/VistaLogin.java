@@ -1,6 +1,7 @@
 package Login;
 
 import VentanaAdmin.VistaAdmin;
+import VentanaInspector.Inspector;
 import VentanaInspector.VistaInspector;
 
 import javax.swing.*;
@@ -79,7 +80,7 @@ public class VistaLogin extends JFrame {
      * @param password
      */
     private void btnConectar(ActionEvent evt,String user,String password){
-
+        boolean conecto=false;
         try{
 
             if(user.equals("admin")){
@@ -87,15 +88,24 @@ public class VistaLogin extends JFrame {
                 VistaAdmin vistaAdmin=new VistaAdmin(login.getTabla());
             }
             else{
-                   boolean conectado= login.verificarUsuario(user,password);
-                    if(conectado){
-                        VistaInspector inspector=new VistaInspector();
+                   Inspector inspector = login.verificarInspector(user,password);
+                    if(inspector!=null){
+                        VistaInspector inspectorV=new VistaInspector(inspector, login.getTabla());
+                        conecto=true;
                     }
                     else{
-                        System.out.println("No se conecto");
+                        JOptionPane.showMessageDialog(
+                                this,
+                                "Legajo/Contrasenia incorrecta.\n",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE
+                        );
                     }
             }
-            this.dispose();
+
+            if(conecto){
+                this.dispose();
+            }
         }
 
         catch (SQLException ex){

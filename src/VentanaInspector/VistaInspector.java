@@ -1,12 +1,14 @@
 package VentanaInspector;
 
+import quick.dbtable.DBTable;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class VistaInspector extends JFrame {
 
 
-    public VistaInspector() {
+    public VistaInspector(Inspector inspector, DBTable tabla) {
         super("Inspector");
         setVisible(true);
         setResizable(false);

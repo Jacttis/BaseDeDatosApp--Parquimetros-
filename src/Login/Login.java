@@ -1,5 +1,6 @@
 package Login;
 
+import VentanaInspector.Inspector;
 import quick.dbtable.DBTable;
 
 import javax.swing.*;
@@ -76,22 +77,23 @@ public class Login {
      * @return boolean
      * @throws SQLException
      */
-    public boolean verificarUsuario(String usuario , String contrasenia) throws SQLException {
-        boolean verificado=false;
+    public Inspector verificarInspector(String usuario , String contrasenia) throws SQLException {
+        Inspector inspector=null;
         this.conectarBD("inspector","inspector");
         Connection connection= tabla.getConnection();
         Statement statement=connection.createStatement();
         ResultSet rs=statement.executeQuery("SELECT * FROM inspectores WHERE legajo="+usuario+" and password=MD5("+contrasenia+")");
 
         if(rs.next()){
-            String dni=rs.getString("dni");
-            if(dni!=null){
-                verificado=true;
-            }
+            int dni=rs.getInt("dni");
+            int legajo=rs.getInt("legajo");
+            String nombre=rs.getString("nombre");
+            String apellido=rs.getString("apellido");
+            inspector=new Inspector(dni,nombre,apellido,legajo);
         }
         rs.close();
         statement.close();
-        return verificado;
+        return inspector;
 
     }
 
