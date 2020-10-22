@@ -35,13 +35,13 @@ public class VistaAdmin extends JFrame {
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Panel
+        // Panel del JFRAME de admin
         contentPane=new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(null);
         setContentPane(contentPane);
 
-        //Creo el area a escribir comandos
+        //Area para escribir los comando SQL
         txtConsulta=new JTextArea();
         txtConsulta.setBounds(0,3,600,70);
         contentPane.add(txtConsulta);
@@ -50,11 +50,6 @@ public class VistaAdmin extends JFrame {
         btnEjecutar =new JButton("Ejecutar");
         btnEjecutar.setBounds(601,0,100,35);
         contentPane.add(btnEjecutar);
-
-        //Boton Ejecutar
-        btnBorrar =new JButton("Borrar");
-        btnBorrar.setBounds(601,35,100,35);
-        contentPane.add(btnBorrar);
         btnEjecutar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -62,19 +57,25 @@ public class VistaAdmin extends JFrame {
             }
         });
 
-        //Tabla
+        //Boton Borrar
+        btnBorrar =new JButton("Borrar");
+        btnBorrar.setBounds(601,35,100,35);
+        contentPane.add(btnBorrar);
+
+
+        //Tabla de la base de datos pasada por parametros
         this.tabla=tabla;
         tabla.setBounds(0,100,701,460);
         contentPane.add(tabla);
 
-       //Lista con todas las tablas
+        //Lista con todas los atributos de la tabla elegida
         listaColumnas=new JList<String>();
         listaColumnas.setBounds(868,100,162,262);
         contentPane.add(listaColumnas);
 
 
 
-        //Lista con todas las tablas
+        //Lista con todas las tablas de la base de datos
         dListaTabla=admin.crearLista("SHOW TABLES","Tables_in_parquimetros");
         listaTablas=new JList(dListaTabla);
         listaTablas.setBounds(705,100,162,262);
@@ -90,7 +91,6 @@ public class VistaAdmin extends JFrame {
                         listaColumnas.setModel(dListaColumnas);
                         listaTablas.clearSelection();
                 }
-                //admin.crearLista("Show "+listaTablas.getSelectedValue());
             }
         });
 
@@ -100,11 +100,18 @@ public class VistaAdmin extends JFrame {
 
 
     }
+
+    /**
+     * Action performed del boton ejecutar que toma la consulta y la ejecuta
+     * @param evt
+     */
     private void btnEjecutarActionPerformed(ActionEvent evt) {
         this.refrescarTabla();
     }
 
-
+    /**
+     * Refresca la tabla con la consulta obtenida en el JTextArea
+     */
     private void refrescarTabla()
     {
         try

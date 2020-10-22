@@ -16,6 +16,12 @@ public class Admin {
         this.tabla = tabla;
     }
 
+    /**
+     * Crea una lista con la consulta y la columna pasada por parametro y devuelve una DefaultListModel de string
+     * @param consulta
+     * @param columna
+     * @return DefaultListModel<String>
+     */
     public DefaultListModel<String> crearLista(String consulta,String columna) {
         DefaultListModel<String> listModel = new DefaultListModel<String>();
         try {
@@ -29,15 +35,6 @@ public class Admin {
             rs.close();
             statement.close();
 
-            /*tabla.setSelectSql(consulta);
-            tabla.createColumnModelFromQuery();
-            tabla.refresh();
-            Object[][] tablas=tabla.getDataArray();
-
-            for (int i = 0; i < tablas.length; i++) {
-                listModel.addElement(tablas[i][0].toString());
-
-            }*/
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
