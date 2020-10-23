@@ -1,8 +1,10 @@
 package VentanaInspector;
 
+import VentanaInspector.ManejoFechas.Fechas;
 import quick.dbtable.DBTable;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 public class Prueba {
     public static DBTable tabla=new DBTable();
@@ -32,12 +34,17 @@ public class Prueba {
 
     }
     public static void main(String[] args) {
-        Inspector inspector=new Inspector(41097481,"Axel","Fontana",1);
+        /*Inspector inspector=new Inspector(41097481,"Axel","Fontana",1);
         conectarBD("inspector","inspector");
         InspectorLogica inspectorLogica= new InspectorLogica(inspector,tabla);
         inspectorLogica.agregarPatente("PIV519");
         inspectorLogica.agregarPatente("PIV518");
-        inspectorLogica.agregarMultas("Zapiola",1100);
+        inspectorLogica.agregarMultas("Zapiola",1100);*/
+        Date entradaManiana= Fechas.convertirStringATime("08:00:00");
+        Date salidaManiana= Fechas.convertirStringATime("13:59:00");
+        if(entradaManiana.before(salidaManiana)){
+            System.out.println("Anda");
+        }
 
 
     }

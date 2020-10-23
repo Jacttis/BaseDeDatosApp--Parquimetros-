@@ -80,5 +80,21 @@ public class Fechas
         return false;
     }
 
+    public static java.sql.Time convertirStringATime(String hora){
+        java.sql.Time ppstime=null;
+        try {
+
+            SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss"); //if 24 hour format
+
+            java.util.Date d1 =(java.util.Date)format.parse(hora);
+
+            ppstime = new java.sql.Time(d1.getTime());
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return ppstime;
+    }
+
 }
 

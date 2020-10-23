@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.Date;
 
 public class Inspector {
-
+    public static final int FUERA_TURNO = -1;
     private int dni;
     private String nombre;
     private String apellido;
@@ -58,14 +58,18 @@ public class Inspector {
 
 
 
-    public int getID(DBTable tabla){
+    public int getID(DBTable tabla,String dia,String turno){
         int id=0;
         try {
             Connection conexion=tabla.getConnection();
             Statement statement= conexion.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT id_asociado_con FROM asociado_con WHERE legajo="+legajo+" and calle='"+calleSeleccionado+"' and altura="+alturaSeleccionado+";");
+            ResultSet rs = statement.executeQuery("SELECT id_asociado_con FROM asociado_con WHERE legajo="+legajo+" and calle='"+calleSeleccionado+
+                                                "' and altura="+alturaSeleccionado+" and dia='"+dia+"' and turno='"+turno+"';");
             if(rs.next()){
                 id=rs.getInt("id_asociado_con");
+            }
+            else{
+                id=FUERA_TURNO;
             }
         }
         catch (SQLException throwables) {
