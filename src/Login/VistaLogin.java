@@ -9,7 +9,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
 
 public class VistaLogin extends JFrame {
@@ -19,16 +18,16 @@ public class VistaLogin extends JFrame {
    private JTextField user;
    private JPasswordField password;
    private JButton connection;
-   private JLabel username;
+   private JLabel labelUser;
     private JLabel ayuda;
     private JLabel jLabelPassword;
     private Login login;
 
 
    public VistaLogin(){
-
+       super("Login");
        setVisible(true);
-       setBounds(600, 300, 400, 300);
+       setBounds(600, 300, 300, 300);
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        setResizable(false);
        login =new Login();
@@ -36,32 +35,39 @@ public class VistaLogin extends JFrame {
        // Panel del JFRAME
        contentPane=new JPanel();
        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+       contentPane.setBackground(Color.lightGray);
        contentPane.setLayout(null);
        setContentPane(contentPane);
 
        //Texto Usuario y label de usuario y el label de ayuda
-       username = new JLabel("Usuario - ");
-       username.setBounds(110,100,70,20);
+       labelUser = new JLabel("Usuario - ");
+       labelUser.setBounds(10,100,70,20);
+
+       //label de ayuda
        ayuda=new JLabel("?");
-       ayuda.setBounds(350,100,10,10);
+       ayuda.setBounds(250,100,10,10);
        ayuda.setToolTipText("El usuario es el legajo para los inspectores");
+
+       //Texto Usuario
        user=new JTextField();
-       user.setBounds(190,100,150,20);
+       user.setBounds(90,100,150,20);
        contentPane.add(user);
-       contentPane.add(username);
+       contentPane.add(labelUser);
        contentPane.add(ayuda);
 
-       //Texto Usuario y label
+       //label Contrasenia
        jLabelPassword = new JLabel("Contrasenia - ");
-       jLabelPassword.setBounds(110,130,120,20);
+       jLabelPassword.setBounds(10,130,120,20);
+
+       //Contrasenia Field
        password=new JPasswordField();
-       password.setBounds(190,130,150,20);
+       password.setBounds(90,130,150,20);
        contentPane.add(password);
        contentPane.add(jLabelPassword);
 
        //Boton Conectar
        connection= new JButton("Conectar");
-       connection.setBounds(110,160,100,20);
+       connection.setBounds(10,160,100,20);
        contentPane.add(connection);
        connection.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent evt) {
