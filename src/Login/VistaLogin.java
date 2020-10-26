@@ -28,7 +28,7 @@ public class VistaLogin extends JFrame {
    public VistaLogin(){
 
        setVisible(true);
-       setBounds(600, 300, 800, 600);
+       setBounds(600, 300, 400, 300);
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        setResizable(false);
        login =new Login();
@@ -41,27 +41,27 @@ public class VistaLogin extends JFrame {
 
        //Texto Usuario y label de usuario y el label de ayuda
        username = new JLabel("Usuario - ");
-       username.setBounds(260,140,70,20);
+       username.setBounds(110,100,70,20);
        ayuda=new JLabel("?");
-       ayuda.setBounds(490,140,10,10);
+       ayuda.setBounds(350,100,10,10);
        ayuda.setToolTipText("El usuario es el legajo para los inspectores");
        user=new JTextField();
-       user.setBounds(330,140,150,20);
+       user.setBounds(190,100,150,20);
        contentPane.add(user);
        contentPane.add(username);
        contentPane.add(ayuda);
 
        //Texto Usuario y label
        jLabelPassword = new JLabel("Contrasenia - ");
-       jLabelPassword.setBounds(240,170,120,20);
+       jLabelPassword.setBounds(110,130,120,20);
        password=new JPasswordField();
-       password.setBounds(330,170,150,20);
+       password.setBounds(190,130,150,20);
        contentPane.add(password);
        contentPane.add(jLabelPassword);
 
        //Boton Conectar
        connection= new JButton("Conectar");
-       connection.setBounds(330,200,100,20);
+       connection.setBounds(110,160,100,20);
        contentPane.add(connection);
        connection.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent evt) {
@@ -86,6 +86,7 @@ public class VistaLogin extends JFrame {
             if(user.equals("admin")){
                 login.conectarBD(user,password);
                 VistaAdmin vistaAdmin=new VistaAdmin(login.getTabla());
+                this.dispose();
             }
             else{
                    Inspector inspector = login.verificarInspector(user,password);

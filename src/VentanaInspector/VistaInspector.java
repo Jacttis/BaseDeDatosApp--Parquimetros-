@@ -16,10 +16,12 @@ public class VistaInspector extends JFrame {
     JButton agregarPatente;
     Inspector inspector;
     InspectorLogica logica;
-
+    JLabel ubicacion;
+    JLabel multasL;
 
     public VistaInspector(Inspector inspector, DBTable tabla) {
-        super("Inspector");
+
+        super("Unidad Personal");
         setVisible(true);
         setResizable(false);
         setPreferredSize(new Dimension(1028, 600));
@@ -32,10 +34,21 @@ public class VistaInspector extends JFrame {
 
         contentPane=new JPanel();
         setContentPane(contentPane);
+        contentPane.setLayout(null);
+
+        //Label Ubicacion y MultasL
+
+        ubicacion = new JLabel("Elejir Ubicacion -");
+        ubicacion.setBounds(300,35,150, 35);
+        contentPane.add(ubicacion);
+
+        multasL = new JLabel("Multas Labradas :");
+        multasL.setBounds(100,120,150,35);
+        contentPane.add(multasL);
 
         //Boton patente
         agregarPatente = new JButton("Agregar Patente");
-        agregarPatente.setBounds(400, 35, 180, 35);
+        agregarPatente.setBounds(100, 35, 180, 35);
         agregarPatente.setEnabled(true);
         agregarPatente.addActionListener(new ActionListener() {
             @Override
@@ -44,21 +57,22 @@ public class VistaInspector extends JFrame {
             }
         });
         contentPane.add(agregarPatente);
+
         //ComboBox Calles
         calles=new JComboBox<String>();
-        calles.setBounds(500,35,180,35);
+        calles.setBounds(400,35,180,35);
         agregarCalles();
         contentPane.add(calles);
 
-
-        this.tabla.setBounds(400,200,200,200);
+        //tabla
+        this.tabla.setBounds(100,150,700,400);
         contentPane.add(this.tabla);
 
 
         //Boton multa
         crearMulta=new JButton("Generar Multas");
-        crearMulta.setBounds(400,70,180,35);
-        crearMulta.setEnabled(true);
+        crearMulta.setBounds(100,70,180,35);
+        crearMulta.setEnabled(false);
         crearMulta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -78,6 +92,7 @@ public class VistaInspector extends JFrame {
     }
 
     private void agregarNuevaPatente(ActionEvent event){
+        crearMulta.setEnabled(true);
         agregarPatente.setEnabled(false);
         boolean pvalida = false;
         while(!pvalida){
