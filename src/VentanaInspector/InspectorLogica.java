@@ -69,23 +69,34 @@ public class InspectorLogica {
     /**
      * Verifica si el inspector puede realizar la multa en esa ubicacion
      * Controla la lista de patentes multar y las agrega a la BD Multas
-     * @param calle
+     * @param ubicacion
      * @param altura
      */
-    public boolean agregarMultas(String calle, int altura){
+    public boolean agregarMultas(String ubicacion, int altura){
         try {
-            patentesAMultar(calle,altura);
+            int parqid;
+            patentesAMultar(ubicacion,altura);
 
             inspector.setAlturaSeleccionado(altura);
-            inspector.setCalleSeleccionado(calle);
+            inspector.setCalleSeleccionado(ubicacion);
 
             Connection conexion=tabla.getConnection();
             Statement statement= conexion.createStatement();
             ResultSet rsFecha= statement.executeQuery("SELECT CURDATE(),CURTIME();");
+
             if(rsFecha.next()) {
                 diaMulta = rsFecha.getDate("CURDATE()");
                 horaMulta = rsFecha.getTime("CURTIME()");
             }
+
+            //Obtengo el id del parquimetro y registro el acceso del inspector al parquimetro
+            ResultSet rsUbicacion = statement.executeQuery("SELECT id_parq FROM parquimetros WHERE calle = '"+ubicacion+"' and altura = "+altura+";");
+            if (rsUbicacion.next()){
+                parqid = rsUbicacion.getInt("id_parq");
+                statement.executeUpdate("INSERT INTO accede(legajo,id_parq,fecha,hora) VALUE ('"+inspector.getLegajo()+"','"+parqid+"','"+diaMulta+"','"+horaMulta+"');");
+            }
+
+
             Pair<String,String> diaTurno=obtenerDiaTurno(diaMulta,horaMulta);
             int id_asociado_con=inspector.getID(tabla,diaTurno.getKey(),diaTurno.getValue());
 

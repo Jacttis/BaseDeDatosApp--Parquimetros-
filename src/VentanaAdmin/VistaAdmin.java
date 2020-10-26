@@ -27,6 +27,7 @@ public class VistaAdmin extends JFrame {
 
 
     public VistaAdmin(DBTable tabla){
+        super("Panel Admin");
         admin=new Admin(tabla);
         setVisible(true);
         setResizable(false);
