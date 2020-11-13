@@ -1,7 +1,7 @@
 package VentanaAdmin;
 
 import quick.dbtable.DBTable;
-
+import Login.VistaLogin;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -18,6 +18,7 @@ public class VistaAdmin extends JFrame {
     private JTextArea txtConsulta;
     private JButton btnBorrar;
     private JButton btnEjecutar;
+    private JButton menuPrincipal;
     private DBTable tabla;
     private JList listaTablas;
     private DefaultListModel<String> dListaTabla;
@@ -62,6 +63,20 @@ public class VistaAdmin extends JFrame {
         btnBorrar =new JButton("Borrar");
         btnBorrar.setBounds(601,35,100,35);
         contentPane.add(btnBorrar);
+
+        //Boton menuPrincipal
+        menuPrincipal = new JButton("Menu Principal");
+        menuPrincipal.setBounds(710, 0,180, 35);
+        menuPrincipal.setEnabled(true);
+        menuPrincipal.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VistaLogin vistaL = new VistaLogin();
+                dispose();
+            }
+        });
+        contentPane.add((menuPrincipal));
+
 
 
         //Tabla de la base de datos pasada por parametros
