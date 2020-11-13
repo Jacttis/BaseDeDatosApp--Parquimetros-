@@ -40,8 +40,4 @@ public class Admin {
         }
         return listModel;
     }
-
-
-
-
 }
