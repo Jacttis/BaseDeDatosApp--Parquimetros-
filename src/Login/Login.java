@@ -52,7 +52,6 @@ public class Login {
 
             //establece una conexi�n con la  B.D. "parquimetros"  usando directamante una tabla DBTable
             tabla.connectDatabase(driver, uriConexion, usuario, clave);
-            System.out.println("Success");
 
         }
         catch (SQLException ex) {

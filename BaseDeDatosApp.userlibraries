@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="mysql-connector-java-8.0.21">
+    <archive path="C:/Users/julia/Desktop/BDD/mysql-connector-java-8.0.21/mysql-connector-java-8.0.21.jar" />
+  </library>
+  <library name="quicktable-3.0">
+    <archive path="C:/Users/julia/Desktop/BDD/ejemplo java-MySQL/quicktable-3.0.jar" />
+  </library>
+</eclipse-userlibraries>
+

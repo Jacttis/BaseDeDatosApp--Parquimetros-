@@ -87,10 +87,9 @@ public class VistaAdmin extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()) {
-                        System.out.println(dListaTabla.getElementAt(e.getLastIndex()));
-                        dListaColumnas=admin.crearLista("describe "+dListaTabla.getElementAt(e.getLastIndex()),"Field");
-                        listaColumnas.setModel(dListaColumnas);
-                        listaTablas.clearSelection();
+                    dListaColumnas=admin.crearLista("describe "+dListaTabla.getElementAt(e.getLastIndex()),"Field");
+                    listaColumnas.setModel(dListaColumnas);
+                    listaTablas.clearSelection();
                 }
             }
         });
@@ -111,7 +110,7 @@ public class VistaAdmin extends JFrame {
     }
 
     /**
-     * Refresca la tabla con la consulta obtenida en el JTextArea
+     * Refresca la tabla con la consulta obtenida en el JTextArea(Dado por la catedra)
      */
     private void refrescarTabla()
     {

@@ -1,0 +1,2 @@
+*Si el inspector ingresa una patente que no se encuentra en la base de datos, se le pedira que ingrese de nuevo la lista de patentes.Ya que no queria darle el privilegio
+ de que conozca a la tabla automoviles.  

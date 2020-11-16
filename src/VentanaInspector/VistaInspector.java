@@ -6,18 +6,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.*;
+import java.util.LinkedList;
 
 public class VistaInspector extends JFrame {
     JPanel contentPane;
     JComboBox<String> calles;
+    JComboBox<Integer> parquimetros;
     JButton crearMulta;
     DBTable tabla;
     JButton agregarPatente;
     Inspector inspector;
     InspectorLogica logica;
-    JLabel ubicacion;
+    JLabel jLabelubicacion;
     JLabel multasL;
+    JLabel jLabelParqu;
 
     public VistaInspector(Inspector inspector, DBTable tabla) {
 
@@ -38,9 +43,13 @@ public class VistaInspector extends JFrame {
 
         //Label Ubicacion y MultasL
 
-        ubicacion = new JLabel("Elejir Ubicacion -");
-        ubicacion.setBounds(300,35,150, 35);
-        contentPane.add(ubicacion);
+        jLabelubicacion = new JLabel("Elegir Ubicacion -");
+        jLabelubicacion.setBounds(300,35,150, 35);
+        contentPane.add(jLabelubicacion);
+
+        jLabelParqu = new JLabel("Elegir Parquimetro -");
+        jLabelParqu.setBounds(285,73,150, 35);
+        contentPane.add(jLabelParqu);
 
         multasL = new JLabel("Multas Labradas :");
         multasL.setBounds(100,120,150,35);
@@ -58,11 +67,30 @@ public class VistaInspector extends JFrame {
         });
         contentPane.add(agregarPatente);
 
+        //ComboBox parquimetros
+        parquimetros=new JComboBox<Integer>();
+        parquimetros.setBounds(400,73,180,35);
+        contentPane.add(parquimetros);
+
         //ComboBox Calles
         calles=new JComboBox<String>();
         calles.setBounds(400,35,180,35);
+        calles.addItem(" ");
         agregarCalles();
         contentPane.add(calles);
+
+        calles.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED && !e.getItem().equals(" ")){
+                    String calle = (String) e.getItem();
+                    String[] ca=calle.split(" ");
+                    agregarParquimetros(ca[0],Integer.parseInt(ca[1]));
+                }
+            }
+        });
+
+
 
         //tabla
         this.tabla.setBounds(100,150,700,400);
@@ -76,11 +104,22 @@ public class VistaInspector extends JFrame {
         crearMulta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(generarMultas(e)){
-                    JOptionPane.showMessageDialog(null,"Se crearon las multas");
-                }
-                else{
-                    JOptionPane.showMessageDialog(null,"No tiene permiso");
+                try {
+                    if(!calles.getSelectedItem().equals(" ")) {
+                        if (generarMultas(e)) {
+                            JOptionPane.showMessageDialog(null, "Se crearon las multas");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No tiene permiso");
+                        }
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "Seleccione una ubicacion");
+                    }
+                } catch (SQLException throwables) {
+                    JOptionPane.showMessageDialog(null,"Patente de automovil no reconocida\nvuelva a caargar las patentes correctamente");
+                    logica.getListaPatentesModel().clear();
+                    logica.getListaPatentesMulta().clear();
+
                 }
             }
         });
@@ -91,6 +130,10 @@ public class VistaInspector extends JFrame {
 
     }
 
+    /**
+     * LLama a la logica para agregar una nueva patente a verificar si esta multada
+     * @param event
+     */
     private void agregarNuevaPatente(ActionEvent event){
         crearMulta.setEnabled(true);
         agregarPatente.setEnabled(false);
@@ -109,21 +152,32 @@ public class VistaInspector extends JFrame {
 
     }
 
-
-    private boolean generarMultas(ActionEvent e){
+    /**
+     * LLama a la logica para generar las multas correspondientes
+     * @param e Evento del action listener que se llama
+     * @return
+     */
+    private boolean generarMultas(ActionEvent e) throws SQLException {
         String calleAltura= (String) calles.getSelectedItem();
         String[] ca=calleAltura.split(" ");
+        int id_parq= (int) parquimetros.getSelectedItem();
         boolean ret=logica.agregarMultas(ca[0],Integer.parseInt(ca[1]));
+        logica.marcarAcceso(id_parq);
+
         if(ret){
             refrescarTabla();
         }
         return ret;
     }
 
-
+    /**
+     * Agrega las calles al combo box el cual tiene asignado dicho inspector.
+     */
     private void agregarCalles(){
         Connection connection= tabla.getConnection();
         Statement statement= null;
+        LinkedList<String> verificacion=new LinkedList<String>();
+        boolean primero=false;
         try {
             statement = connection.createStatement();
             ResultSet rs=statement.executeQuery("SELECT calle,altura FROM asociado_con WHERE legajo="+inspector.getLegajo()+";");
@@ -131,7 +185,10 @@ public class VistaInspector extends JFrame {
             while(rs.next()){
                 String c=rs.getString("calle");
                 int a=rs.getInt("altura");
-                calles.addItem(c+" "+a);
+                if(!verificacion.contains(c+" "+a)) {
+                    calles.addItem(c + " " + a);
+                    verificacion.add(c+" "+a);
+                }
             }
             rs.close();
             statement.close();
@@ -143,7 +200,35 @@ public class VistaInspector extends JFrame {
     }
 
     /**
-     * Refresca la tabla con la consulta obtenida en el JTextArea
+     * Agrega las calles al combo box el cual tiene asignado dicho inspector.
+     */
+    private void agregarParquimetros(String calle,int altura){
+        parquimetros.removeAllItems();
+        Connection connection= tabla.getConnection();
+        Statement statement= null;
+        LinkedList<Integer> verificacion=new LinkedList<Integer>();
+        try {
+            statement = connection.createStatement();
+            ResultSet rs=statement.executeQuery("SELECT id_parq FROM parquimetros WHERE calle='"+calle+"' and altura="+altura);
+
+            while(rs.next()){
+                int id_parq=rs.getInt("id_parq");
+                if(!verificacion.contains(id_parq)) {
+                    parquimetros.addItem(id_parq);
+                    verificacion.add(id_parq);
+                }
+            }
+            rs.close();
+            statement.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+    }
+
+    /**
+     * Refresca la tabla con la consulta obtenida en el JTextArea(Dado por la catedra)
      */
     private void refrescarTabla()
     {
@@ -151,8 +236,8 @@ public class VistaInspector extends JFrame {
         {
             // seteamos la consulta a partir de la cual se obtendr�n los datos para llenar la tabla
             tabla.setSelectSql("SELECT numero,patente,fecha,hora,calle,altura,legajo " +
-                                "FROM multa NATURAL JOIN asociado_con " +
-                                "WHERE fecha='"+logica.getDiaMulta()+"' and hora='"+logica.getHoraMulta()+"' and legajo="+inspector.getLegajo()+";");
+                    "FROM multa NATURAL JOIN asociado_con " +
+                    "WHERE fecha='"+logica.getDiaMulta()+"' and hora='"+logica.getHoraMulta()+"' and legajo="+inspector.getLegajo()+";");
 
             // obtenemos el modelo de la tabla a partir de la consulta para
             // modificar la forma en que se muestran de algunas columnas
