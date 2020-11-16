@@ -1,5 +1,6 @@
 package VentanaInspector;
 
+import Login.VistaLogin;
 import quick.dbtable.DBTable;
 
 import javax.swing.*;
@@ -9,20 +10,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.*;
-import java.util.LinkedList;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class VistaInspector extends JFrame {
-    JPanel contentPane;
-    JComboBox<String> calles;
-    JComboBox<Integer> parquimetros;
-    JButton crearMulta;
-    DBTable tabla;
-    JButton agregarPatente;
-    Inspector inspector;
-    InspectorLogica logica;
-    JLabel jLabelubicacion;
-    JLabel multasL;
-    JLabel jLabelParqu;
+    private JPanel contentPane;
+    private JComboBox<String> calles;
+    private JButton crearMulta;
+    private DBTable tabla;
+    private JButton agregarPatente;
+    private JButton menuPrincipal;
+    private Inspector inspector;
+    private InspectorLogica logica;
+    private JLabel ubicacion;
+    private JLabel multasL;
+    private JLabel patentesN;
+    private JList<String> listaPatentes;
+    private DefaultListModel<String> listaPM;
 
     public VistaInspector(Inspector inspector, DBTable tabla) {
 
@@ -41,7 +46,7 @@ public class VistaInspector extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        //Label Ubicacion y MultasL
+        //Label Ubicacion
 
         jLabelubicacion = new JLabel("Elegir Ubicacion -");
         jLabelubicacion.setBounds(300,35,150, 35);
@@ -51,9 +56,17 @@ public class VistaInspector extends JFrame {
         jLabelParqu.setBounds(285,73,150, 35);
         contentPane.add(jLabelParqu);
 
+        //Label multasL
+
         multasL = new JLabel("Multas Labradas :");
         multasL.setBounds(100,120,150,35);
         contentPane.add(multasL);
+
+        //Label patentesN
+
+        patentesN = new JLabel("Patentes ingresadas :");
+        patentesN.setBounds(805,120 ,150, 35);
+        contentPane.add(patentesN);
 
         //Boton patente
         agregarPatente = new JButton("Agregar Patente");
@@ -125,7 +138,24 @@ public class VistaInspector extends JFrame {
         });
         contentPane.add(crearMulta);
 
+        //Boton menuPrincipal
+        menuPrincipal = new JButton("Menu Principal");
+        menuPrincipal.setBounds(400, 70,180, 35);
+        menuPrincipal.setEnabled(true);
+        menuPrincipal.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VistaLogin vistaL = new VistaLogin();
+                dispose();
+            }
+        });
+        contentPane.add(menuPrincipal);
 
+        //JList listaPatentes
+        listaPM =new DefaultListModel();
+        listaPatentes = new JList<String>(listaPM);
+        listaPatentes.setBounds(805,150,162,400);
+        contentPane.add(listaPatentes);
 
 
     }
@@ -138,14 +168,26 @@ public class VistaInspector extends JFrame {
         crearMulta.setEnabled(true);
         agregarPatente.setEnabled(false);
         boolean pvalida = false;
-        while(!pvalida){
+        boolean patron = false;
+        while(!pvalida && !patron){
             String nombrePatente = JOptionPane.showInputDialog("Ingrese el nombre de la patente");
             if(nombrePatente.length() != 6){
                 JOptionPane.showMessageDialog(null,"Error, ingresar una patente de 6 caracteres");
             }
             else{
                 pvalida = true;
+            }
+            Pattern p = Pattern.compile("[A-Z]{3}[0-9]{3}");
+            Matcher m = p.matcher(nombrePatente);
+            if (m.matches()) {
+                patron = true;
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"Error, ingrese el formato de la patente correcto -> LLLNNN ");
+            }
+            if(pvalida && patron){
                 logica.agregarPatente(nombrePatente);
+                listaPM.addElement(nombrePatente);
             }
         }
         agregarPatente.setEnabled(true);

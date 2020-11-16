@@ -23,6 +23,7 @@ public class InspectorLogica {
     private Date diaMulta;
     private Time horaMulta;
 
+
     public InspectorLogica(Inspector inspector,DBTable tabla){
         this.inspector=inspector;
         this.tabla=tabla;
