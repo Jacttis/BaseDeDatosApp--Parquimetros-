@@ -57,14 +57,20 @@ public class Inspector {
     }
 
 
-
+    /**
+     * Obtiene el id_asociado_con que se pide en cierto dia y turno con este inspector
+     * @param tabla
+     * @param dia
+     * @param turno
+     * @return
+     */
     public int getID(DBTable tabla,String dia,String turno){
         int id=0;
         try {
             Connection conexion=tabla.getConnection();
             Statement statement= conexion.createStatement();
             ResultSet rs = statement.executeQuery("SELECT id_asociado_con FROM asociado_con WHERE legajo="+legajo+" and calle='"+calleSeleccionado+
-                                                "' and altura="+alturaSeleccionado+" and dia='"+dia+"' and turno='"+turno+"';");
+                    "' and altura="+alturaSeleccionado+" and dia='"+dia+"' and turno='"+turno+"';");
             if(rs.next()){
                 id=rs.getInt("id_asociado_con");
             }

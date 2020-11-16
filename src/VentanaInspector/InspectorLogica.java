@@ -11,7 +11,12 @@ import java.util.LinkedList;
 
 public class InspectorLogica {
 
+
+
     private DefaultListModel<String> listaPatentesModel;
+
+
+
     private LinkedList<String> listaPatentesMulta;
     private Inspector inspector;
     private DBTable tabla;
@@ -27,22 +32,14 @@ public class InspectorLogica {
     }
 
     /**
-     *
+     *Agrega las patentes a una lista y a un model de lista
      * @param patente
      */
     public void agregarPatente(String patente){
         listaPatentesModel.addElement(patente);
         listaPatentesMulta.add(patente);
-
-        System.out.println(listaPatentesModel.toString());
     }
 
-
-   /*private boolean verificarPermiso(int id_asociado_con){
-
-
-
-    }*/
 
     /**
      * elimina las patentes que no van a ser multadas
@@ -73,9 +70,8 @@ public class InspectorLogica {
      * @param ubicacion
      * @param altura
      */
-    public boolean agregarMultas(String ubicacion, int altura){
+    public boolean agregarMultas(String ubicacion, int altura) throws SQLException {
         try {
-            int parqid;
             patentesAMultar(ubicacion,altura);
 
             inspector.setAlturaSeleccionado(altura);
@@ -90,13 +86,6 @@ public class InspectorLogica {
                 horaMulta = rsFecha.getTime("CURTIME()");
             }
 
-            //Obtengo el id del parquimetro y registro el acceso del inspector al parquimetro
-            ResultSet rsUbicacion = statement.executeQuery("SELECT id_parq FROM parquimetros WHERE calle = '"+ubicacion+"' and altura = "+altura+";");
-            if (rsUbicacion.next()){
-                parqid = rsUbicacion.getInt("id_parq");
-                statement.executeUpdate("INSERT INTO accede(legajo,id_parq,fecha,hora) VALUE ('"+inspector.getLegajo()+"','"+parqid+"','"+diaMulta+"','"+horaMulta+"');");
-            }
-
 
             Pair<String,String> diaTurno=obtenerDiaTurno(diaMulta,horaMulta);
             int id_asociado_con=inspector.getID(tabla,diaTurno.getKey(),diaTurno.getValue());
@@ -105,18 +94,25 @@ public class InspectorLogica {
                 return false;
             }
             for(String p: listaPatentesMulta) {
-                int rs = statement.executeUpdate("INSERT INTO multa(fecha,hora,patente,id_asociado_con) VALUE ('"+diaMulta+ "','" +horaMulta+ "','"+p+"',"+id_asociado_con+");");
+                int rs = statement.executeUpdate("INSERT INTO multa(fecha,hora,patente,id_asociado_con) VALUE (lkk"+diaMulta+ "','" +horaMulta+ "','"+p+"',"+id_asociado_con+");");
             }
         }
         catch (SQLException throwables) {
-            throwables.printStackTrace();
+            throw throwables;
         } catch (Exception e) {
-
+            return false;
         }
         return true;
 
     }
 
+    /**
+     * Obtiene el dia y el turno actual
+     * @param dia
+     * @param hora
+     * @return
+     * @throws Exception
+     */
     private Pair<String,String> obtenerDiaTurno(Date dia, Time hora) throws Exception{
         String sDia=null;
         Date entradaManiana= Fechas.convertirStringATime("08:00:00");
@@ -157,6 +153,12 @@ public class InspectorLogica {
         return new Pair<String,String>(sDia,turno);
     }
 
+    public void marcarAcceso(int id_parq) throws SQLException {
+        //Obtengo el id del parquimetro y registro el acceso del inspector al parquimetro
+        Connection conexion=tabla.getConnection();
+        Statement statement= conexion.createStatement();
+        statement.executeUpdate("INSERT INTO accede(legajo,id_parq,fecha,hora) VALUE ('"+inspector.getLegajo()+"','"+id_parq+"','"+diaMulta+"','"+horaMulta+"');");
+    }
 
     public Date getDiaMulta() {
         return diaMulta;
@@ -167,4 +169,21 @@ public class InspectorLogica {
         return horaMulta;
     }
 
+    public DefaultListModel<String> getListaPatentesModel() {
+        return listaPatentesModel;
+    }
+
+    public void setListaPatentesModel(DefaultListModel<String> listaPatentesModel) {
+        this.listaPatentesModel = listaPatentesModel;
+    }
+
+    public LinkedList<String> getListaPatentesMulta() {
+        return listaPatentesMulta;
+    }
+
+    public void setListaPatentesMulta(LinkedList<String> listaPatentesMulta) {
+        this.listaPatentesMulta = listaPatentesMulta;
+    }
+
 }
+
