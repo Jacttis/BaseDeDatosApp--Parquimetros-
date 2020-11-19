@@ -11,6 +11,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.*;
 
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +29,9 @@ public class VistaInspector extends JFrame {
     private JLabel patentesN;
     private JList<String> listaPatentes;
     private DefaultListModel<String> listaPM;
+    private JLabel jLabelubicacion;
+    JLabel jLabelParqu;
+    JComboBox<Integer> parquimetros;
 
     public VistaInspector(Inspector inspector, DBTable tabla) {
 
@@ -140,7 +144,7 @@ public class VistaInspector extends JFrame {
 
         //Boton menuPrincipal
         menuPrincipal = new JButton("Menu Principal");
-        menuPrincipal.setBounds(400, 70,180, 35);
+        menuPrincipal.setBounds(800, 70,180, 35);
         menuPrincipal.setEnabled(true);
         menuPrincipal.addActionListener(new ActionListener() {
             @Override

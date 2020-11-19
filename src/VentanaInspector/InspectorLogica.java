@@ -73,7 +73,7 @@ public class InspectorLogica {
     public boolean agregarMultas(String ubicacion, int altura) throws SQLException {
         try {
             patentesAMultar(ubicacion,altura);
-
+            System.out.println(listaPatentesMulta);
             inspector.setAlturaSeleccionado(altura);
             inspector.setCalleSeleccionado(ubicacion);
 
@@ -94,10 +94,11 @@ public class InspectorLogica {
                 return false;
             }
             for(String p: listaPatentesMulta) {
-                int rs = statement.executeUpdate("INSERT INTO multa(fecha,hora,patente,id_asociado_con) VALUE (lkk"+diaMulta+ "','" +horaMulta+ "','"+p+"',"+id_asociado_con+");");
+                int rs = statement.executeUpdate("INSERT INTO multa(fecha,hora,patente,id_asociado_con) VALUE ('"+diaMulta+ "','" +horaMulta+ "','"+p+"',"+id_asociado_con+");");
             }
         }
         catch (SQLException throwables) {
+            throwables.printStackTrace();
             throw throwables;
         } catch (Exception e) {
             return false;
