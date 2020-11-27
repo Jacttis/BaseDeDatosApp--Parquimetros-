@@ -200,20 +200,25 @@ public class VistaParquimetro extends JFrame {
     private void refrescarTabla()
     {
             try {
-                String sql = "CALL conectar("+tarjetas.getSelectedItem()+","+parquimetros.getSelectedItem()+")";
-                Connection c = tabla.getConnection();
-                Statement st = c.createStatement();
-                ResultSet rs = st.executeQuery(sql.trim()).;;
-                if (rs.next()) {
+                Integer id_t = (Integer) tarjetas.getSelectedItem();
+                Integer id_p=(Integer) parquimetros.getSelectedItem();
+                if(id_p!=null && id_t!=null) {
+                    String sql = "CALL conectar(" + id_t + "," + id_p + ")";
+                    Connection c = tabla.getConnection();
+                    Statement st = c.createStatement();
+                    ResultSet rs = st.executeQuery(sql);
                     tabla.refresh(rs);
+                    for (int i = 0; i < tabla.getColumnCount(); i++) {
+                        if (tabla.getColumn(i).getType() == Types.TIME) {
+                            tabla.getColumn(i).setType(Types.CHAR);
+                        }
+                        if (tabla.getColumn(i).getType() == Types.DATE) {
+                            tabla.getColumn(i).setDateFormat("dd/MM/YYYY");
+                        }
+                    }
                 }
-                for (int i = 0; i < tabla.getColumnCount(); i++) {
-                    if (tabla.getColumn(i).getType() == Types.TIME) {
-                        tabla.getColumn(i).setType(Types.CHAR);
-                    }
-                    if (tabla.getColumn(i).getType() == Types.DATE) {
-                        tabla.getColumn(i).setDateFormat("dd/MM/YYYY");
-                    }
+                else{
+                    JOptionPane.showMessageDialog(null,"Por favor elija una tarjeta y un parquimetro");
                 }
 
             } catch (SQLException ex) {
