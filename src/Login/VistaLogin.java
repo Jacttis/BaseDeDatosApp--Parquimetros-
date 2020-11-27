@@ -3,6 +3,7 @@ package Login;
 import VentanaAdmin.VistaAdmin;
 import VentanaInspector.Inspector;
 import VentanaInspector.VistaInspector;
+import VentanaParquimetro.VistaParquimetro;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -22,6 +23,7 @@ public class VistaLogin extends JFrame {
     private JLabel ayuda;
     private JLabel jLabelPassword;
     private Login login;
+    private JButton goToParquimetros;
 
 
     public VistaLogin(){
@@ -68,11 +70,20 @@ public class VistaLogin extends JFrame {
 
         //Boton Conectar
         connection= new JButton("Conectar");
-        connection.setBounds(10,160,100,20);
+        connection.setBounds(10,190,100,20);
         contentPane.add(connection);
         connection.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 btnConectar(evt,user.getText(),String.valueOf(password.getPassword()));
+            }
+        });
+
+        goToParquimetros=new JButton("Conexion parquimetro");
+        goToParquimetros.setBounds(10,160,100,20);
+        contentPane.add(goToParquimetros);
+        goToParquimetros.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                btnParquimetro(evt);
             }
         });
     }
@@ -123,6 +134,15 @@ public class VistaLogin extends JFrame {
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+    private void btnParquimetro(ActionEvent evt){
+        try {
+            login.conectarBD("parquimetro","parq");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        VistaParquimetro vistaParquimetro=new VistaParquimetro(login.getTabla());
+        this.dispose();
     }
 
 
