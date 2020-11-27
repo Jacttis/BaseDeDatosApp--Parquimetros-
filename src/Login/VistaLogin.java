@@ -70,7 +70,7 @@ public class VistaLogin extends JFrame {
 
         //Boton Conectar
         connection= new JButton("Conectar");
-        connection.setBounds(10,190,100,20);
+        connection.setBounds(10,160,100,20);
         contentPane.add(connection);
         connection.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -79,7 +79,7 @@ public class VistaLogin extends JFrame {
         });
 
         goToParquimetros=new JButton("Conexion parquimetro");
-        goToParquimetros.setBounds(10,160,100,20);
+        goToParquimetros.setBounds(10,190,180,20);
         contentPane.add(goToParquimetros);
         goToParquimetros.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
