@@ -9,8 +9,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 
 public class VistaAdmin extends JFrame {
 
@@ -72,6 +71,11 @@ public class VistaAdmin extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 VistaLogin vistaL = new VistaLogin();
+                try {
+                    tabla.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 dispose();
             }
         });
@@ -129,47 +133,38 @@ public class VistaAdmin extends JFrame {
      */
     private void refrescarTabla()
     {
-        try
-        {
-            // seteamos la consulta a partir de la cual se obtendr�n los datos para llenar la tabla
-            tabla.setSelectSql(this.txtConsulta.getText().trim());
+        try {
+            String sql = txtConsulta.getText();
+            Connection c = tabla.getConnection();
+            Statement st = c.createStatement();
+            st.execute(sql.trim());
+            ResultSet rs = st.getResultSet();
+            if (rs!=null && rs.next())
+                tabla.refresh(rs);
+            else
+                if(rs!=null)
+                    tabla.refresh();
+                else
+                    JOptionPane.showMessageDialog(null,"La accion se realizo correctamente");
 
-            // obtenemos el modelo de la tabla a partir de la consulta para
-            // modificar la forma en que se muestran de algunas columnas
-            tabla.createColumnModelFromQuery();
-            for (int i = 0; i < tabla.getColumnCount(); i++)
-            { // para que muestre correctamente los valores de tipo TIME (hora)
-                if	 (tabla.getColumn(i).getType()== Types.TIME)
-                {
+            for (int i = 0; i < tabla.getColumnCount(); i++) {
+                if (tabla.getColumn(i).getType() == Types.TIME) {
                     tabla.getColumn(i).setType(Types.CHAR);
                 }
-                // cambiar el formato en que se muestran los valores de tipo DATE
-                if	 (tabla.getColumn(i).getType()==Types.DATE)
-                {
+                if (tabla.getColumn(i).getType() == Types.DATE) {
                     tabla.getColumn(i).setDateFormat("dd/MM/YYYY");
                 }
             }
-            // actualizamos el contenido de la tabla.
-            tabla.refresh();
-            // No es necesario establecer  una conexi�n, crear una sentencia y recuperar el
-            // resultado en un resultSet, esto lo hace autom�ticamente la tabla (DBTable) a
-            // patir de la conexi�n y la consulta seteadas con connectDatabase() y setSelectSql() respectivamente.
 
-
-
-        }
-        catch (SQLException ex)
-        {
-            // en caso de error, se muestra la causa en la consola
+        } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
-            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
-                    ex.getMessage() + "\n",
-                    "Error al ejecutar la consulta.",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getMessage() + "\n",
+                    "Error al ejecutar la consulta.", JOptionPane.ERROR_MESSAGE);
 
         }
 
     }
+
 }

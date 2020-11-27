@@ -24,14 +24,13 @@ public class VistaInspector extends JFrame {
     private JButton menuPrincipal;
     private Inspector inspector;
     private InspectorLogica logica;
-    private JLabel ubicacion;
     private JLabel multasL;
     private JLabel patentesN;
     private JList<String> listaPatentes;
     private DefaultListModel<String> listaPM;
     private JLabel jLabelubicacion;
-    JLabel jLabelParqu;
-    JComboBox<Integer> parquimetros;
+    private JLabel jLabelParqu;
+    private JComboBox<Integer> parquimetros;
 
     public VistaInspector(Inspector inspector, DBTable tabla) {
 
@@ -150,6 +149,11 @@ public class VistaInspector extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 VistaLogin vistaL = new VistaLogin();
+                try {
+                    tabla.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 dispose();
             }
         });
