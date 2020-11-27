@@ -42,25 +42,25 @@ public class VistaParquimetro extends JFrame {
         contentPane.setLayout(null);
 
         jLabelubicacion = new JLabel("Elegir Ubicacion -");
-        jLabelubicacion.setBounds(300,35,150, 35);
+        jLabelubicacion.setBounds(103,35,150, 35);
         contentPane.add(jLabelubicacion);
 
         jLabelParqu = new JLabel("Elegir Parquimetro -");
-        jLabelParqu.setBounds(285,73,150, 35);
+        jLabelParqu.setBounds(103,73,150, 35);
         contentPane.add(jLabelParqu);
 
         jLabelTarjeta = new JLabel("Elegir Tarjeta -");
-        jLabelTarjeta.setBounds(285,105,150, 35);
+        jLabelTarjeta.setBounds(103,105,150, 35);
         contentPane.add(jLabelTarjeta);
 
         //ComboBox parquimetros
         parquimetros=new JComboBox<Integer>();
-        parquimetros.setBounds(400,73,180,35);
+        parquimetros.setBounds(220,73,180,35);
         contentPane.add(parquimetros);
 
         //ComboBox Calles
         calles=new JComboBox<String>();
-        calles.setBounds(400,35,180,35);
+        calles.setBounds(220,35,180,35);
         calles.addItem(" ");
         agregarCalles();
         contentPane.add(calles);
@@ -77,7 +77,7 @@ public class VistaParquimetro extends JFrame {
         });
         //ComboBox Calles
         tarjetas=new JComboBox<Integer>();
-        tarjetas.setBounds(400,105,180,35);
+        tarjetas.setBounds(220,105,180,35);
         contentPane.add(tarjetas);
         agregarTarjetas();
 
@@ -87,7 +87,7 @@ public class VistaParquimetro extends JFrame {
 
         //Boton menuPrincipal
         menuPrincipal = new JButton("Menu Principal");
-        menuPrincipal.setBounds(800, 70,180, 35);
+        menuPrincipal.setBounds(500, 70,180, 35);
         menuPrincipal.setEnabled(true);
         menuPrincipal.addActionListener(new ActionListener() {
             @Override
@@ -104,7 +104,7 @@ public class VistaParquimetro extends JFrame {
         contentPane.add(menuPrincipal);
 
         conectarTarjeta=new JButton("Conectar Tarjeta");
-        conectarTarjeta.setBounds(620,70,180,35);
+        conectarTarjeta.setBounds(500,35,180,35);
         conectarTarjeta.setEnabled(true);
         conectarTarjeta.addActionListener(new ActionListener() {
             @Override
